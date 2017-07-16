@@ -15,14 +15,17 @@ result["price"] = doc.find_class("discount-price")[1].text_content().strip().spl
 result["ship_fee"] = doc.find_class("delivery-info")[1].text_content().strip().split("\n")[-1].strip()
 options = list()
 cnt = 0
-for elem in doc.find_class("options")[0].iter("option"):
-    if cnt ==0:
-        cnt += 1
-    else:
-        option_text = ""
-        for text in elem.text_content().split("\n"):
-            option_text += text.strip()
-        options.append(option_text)
-result["option"] = options
+try:
+    for elem in doc.find_class("options")[0].iter("option"):
+        if cnt ==0:
+            cnt += 1
+        else:
+            option_text = ""
+            for text in elem.text_content().split("\n"):
+                option_text += text.strip()
+            options.append(option_text)
+    result["option"] = options
+except:
+    result["option"] = ""
 
 print(result)

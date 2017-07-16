@@ -35,15 +35,19 @@ for tr in doc.find_class("prd-point")[1].iter("tr"):
         break
 result["ship_fee"] = ship_fee
 
-option = dict()
-for elem in doc.find_class("opt_area")[0].iter("li"):
-    for str in elem.text_content().split("\n"):
-        print(str.strip())
+try:
+    option = dict()
+    for elem in doc.find_class("opt_area")[0].iter("li"):
+        option_name = elem.find_class("sec01")[0].text_content()
+        option_price = elem.find_class("sec02")[0].text_content()
+        option_on_sale = elem.find_class("opt_thum")[0].text_content().strip()
+        on_sale = True
+        if option_on_sale == "품절":
+            on_sale = False
 
-# try:
-#     option_p = re.compile("attrTypList\":\[([^\]]*)\]")
-#     result["option"] = "[" + option_p.search(html).group(1) + "]"
-# except:
-#     result["option"] = ""
+        option[option_name] = "{price : " + option_price + ", on_sale : " + str(on_sale) + "}"
+    result["option"] = option
+except:
+    result["option"] = ""
 
 print(result)
